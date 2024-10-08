@@ -12,7 +12,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active"> User List</li>
+                                <li class="breadcrumb-item active"> Permission List</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -23,9 +23,9 @@
     <div class="col-md-12">
         <div class="card-primary card-outline card">
             <div class="card-header">
-                <h3 class="card-title">Users list</h3>
+                <h3 class="card-title">Permission list</h3>
                 <div class="card-tools">
-                    <a href="{{ route('user.create') }}" class="badge badge-primary"><i class="fa fa-plus"></i>&nbsp; Add</a>
+                    <a href="{{ route('permission.create') }}" class="badge badge-primary"><i class="fa fa-plus"></i>&nbsp; Add</a>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -33,21 +33,19 @@
                 <table id="table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Profile</th>
+                            <th>#</th>
                             <th>Name</th>
-                            <th>Email</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($users as $user)
+                        @foreach ($permissions as $permission)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ $permission->name }}</td>
                                 <td>
-                                    <a href="{{ route('user.edit', ['user' => $user->id]) }}"><i class="fa fa-edit"></i><a>
-                                            <form action="{{ route('user.destroy', ['user' => $user->id]) }}"
+                                    <a href="{{ route('permission.edit', ['permission' => $permission->id]) }}"><i class="fa fa-edit"></i><a>
+                                            <form action="{{ route('permission.destroy', ['permission' => $permission->id]) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('delete')
@@ -56,50 +54,11 @@
                                             </form>
                                 </td>
                             </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
             </div>
 
         </div>
     </div>
-    <div class="row"></div>
-@endsection
-
-@section('footerScripts')
-    <script>
-        $(document).ready(function(){
-            $('#table').DataTable({
-                    "responsive": true,
-                    "processing": true,
-                    "serverSide": true,
-                    ajax:"{{ route('user.index') }}",
-                    order:[],
-                    sorting:true,
-                    columns:[
-                        {
-                        data: 'profile',
-                        name: 'profile',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data:'action',
-                        name:'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                    ],
-
-            });
-        });
-    </script>
 @endsection

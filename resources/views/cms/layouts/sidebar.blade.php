@@ -39,8 +39,8 @@
                     </a>
                 </li>
 
-                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'user.index'])) menu-open @endif">
-                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'user.index'])) active @endif">
+                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'user.index', 'role.index', 'permission.index', 'module.index' ])) menu-open @endif">
+                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'user.index', 'role.index', 'permission.index', 'module.index' ])) active @endif">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             User Management
@@ -55,7 +55,35 @@
                                 <p>User List</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('role.index') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'role.index') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Role List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('permission.index') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'permission.index') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Permission List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('module.index') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'module.index') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Module List</p>
+                            </a>
+                        </li>
                     </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('activityLogs') }}" class="nav-link  @if(Route::currentRouteName() == 'activityLogs') active @endif">
+                        <i class="fas fa-circle nav-icon"></i>
+                        <p>Activity Logs</p>
+                    </a>
                 </li>
             </ul>
         </nav>

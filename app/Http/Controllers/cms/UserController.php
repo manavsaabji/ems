@@ -23,28 +23,34 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // $data['users'] = User::all();
-        // return view('cms.user.index', $data);
-
         if($request->ajax())
         {
-            $data  = User::select('*');
+
+            // select(..)->whereNotIn('book_price', [100,200])->get();
+            $data  = User::select('*')->where('id','<>',auth()->user()->id);
             return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('profile', function($data){
+                if(empty($data->profile_pic)){
+                    $emptyUrl = asset('assets/images/user.jpg');
+                    $image = '<div class="image">';
+                    $image .= '<img src="'.$emptyUrl.'" style="width:35px; height:35px" class="img-circle elevation-2" alt="User Image">';
+                    $image .= '</div>';
+                    return $image;
+                }else{
+                    $profileUrl = asset('uploads/profile/'.$data->profile_pic);
+                    $image = '<div class="image">';
+                    $image .= '<img src="'.$profileUrl.'" style="width:35px; height:35px" class="img-circle elevation-2" alt="User Image">';
+                    $image .= '</div>';
+                    return $image;
+                }
+            })
             ->addColumn('action', function($data){
-                // <a href="{{ route('user.edit', ['user' => $user->id]) }}"><i class="fa fa-edit"></i><a>
-                //                             <form action="{{ route('user.destroy', ['user' => $user->id]) }}"
-                //                                 method="POST">
-                //                                 @csrf
-                //                                 @method('delete')
-                //                                 <button type="submit" style="background-color: transparent;border:0px"><i
-                //                                         class="fa fa-trash text-red"></i></button>
-                //                             </form>
                 $editUrl = route('user.edit', ['user' => $data->id]);
                 $editBtn = '<a href="' . $editUrl . '"><i class="fa fa-edit"></i><a>';
                 return $editBtn;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['profile','action'])
             ->make(true);
         }
         return view('cms.user.index');
@@ -81,6 +87,12 @@ class UserController extends Controller
         $user->is_active = 1;
         $user->save();
         Mail::to($user->email)->send(new UserCreate($user,$randomPassword));
+
+        $data['message']            =       auth()->user()->name." has created $user->name account";
+        $data['action']             =       'created';
+        $data['module']             =       'user';
+        $data['object']             =       $user;
+        saveLogs($data);
         Session::flash('success','data saved');
         return redirect(route('user.index'));
 
@@ -135,6 +147,13 @@ class UserController extends Controller
             $user->profile_pic = $imageName;
         }
         $user->update();
+
+        $data['message']            =       auth()->user()->name." has updated $user->name account";
+        $data['action']             =       'updated';
+        $data['module']             =       'user';
+        $data['object']             =       $user;
+        saveLogs($data);
+
         Session::flash('success','data updated');
         return redirect(route('user.index'));
     }

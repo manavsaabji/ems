@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class ModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -21,15 +21,8 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = 0;
-        if(request()->has('id'))
-        {
-            $id = request()->id;
-        }
         return [
             'name' => 'required|max:255',
-            'email'=> "required|unique:users,email,$id,id|max:255",
-            'profile_pic' => 'required|image|mimes:jpeg,png|max:2048',
         ];
     }
 }
