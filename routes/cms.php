@@ -22,3 +22,7 @@ Route::resource("module", ModuleController::class);
 
 //Activity Logs
 Route::get('activity-logs',                 [ActivityLogsController::class, 'index'])->name('activityLogs');
+
+Route::get('assign-role/{id}', [UserController::class, 'assignRole'])->name('assignRole');
+
+Route::post('submit-role/', [UserController::class, 'submitRole'])->name('submitRole');

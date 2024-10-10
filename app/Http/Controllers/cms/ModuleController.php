@@ -37,6 +37,11 @@ class ModuleController extends Controller
         $module = new Module();
         $module->name = $request->name;
         $module->save();
+        $data['message']            =       auth()->user()->name." has created $module->name module";
+        $data['action']             =       'created';
+        $data['module']             =       'module';
+        $data['object']             =       $module;
+        saveLogs($data);
         return redirect(route('module.index'));
     }
 
@@ -75,6 +80,11 @@ class ModuleController extends Controller
         }
         $module->name = $request->name;
         $module->update();
+        $data['message']            =       auth()->user()->name." has updated $module->name module";
+        $data['action']             =       'updated';
+        $data['module']             =       'module';
+        $data['object']             =       $module;
+        saveLogs($data);
         return redirect(route('module.index'));
     }
 
@@ -88,6 +98,13 @@ class ModuleController extends Controller
             Session::flash('error','data not found');
             return redirect(route('module.index'));
         }
+
+        $data['message']            =       auth()->user()->name." has deleted $module->name module";
+        $data['action']             =       'deleted';
+        $data['module']             =       'module';
+        $data['object']             =       $module;
+        saveLogs($data);
+
         $module->delete();
         return redirect(route('module.index'));
     }

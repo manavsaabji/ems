@@ -37,6 +37,11 @@ class RoleController extends Controller
         $role = new Role();
         $role->name = $request->name;
         $role->save();
+        $data['message']            =       auth()->user()->name." has created $role->name role";
+        $data['action']             =       'created';
+        $data['module']             =       'role';
+        $data['object']             =       $role;
+        saveLogs($data);
         Session::flash('success','data saved');
         return redirect(route('role.index'));
     }
@@ -69,13 +74,18 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = Role::find($id);
-        if(empty($data)){
+        $role = Role::find($id);
+        if(empty($role)){
             Session::flash('error','data not found');
             return redirect(route('role.index'));
         }
-        $data->name = $request->name;
-        $data->update();
+        $role->name = $request->name;
+        $role->update();
+        $data['message']            =       auth()->user()->name." has updated $role->name role";
+        $data['action']             =       'updated';
+        $data['module']             =       'role';
+        $data['object']             =       $role;
+        saveLogs($data);
         Session::flash('success','data update successfully');
         return redirect(route('role.index'));
     }
@@ -85,12 +95,17 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        $data = Role::find($id);
-        if(empty($data)){
+        $role = Role::find($id);
+        if(empty($role)){
             Session::flash('error', 'data not found');
             return redirect(route('role.index'));
         }
-        $data->delete();
+        $data['message']            =       auth()->user()->name." has deleted $role->name role";
+        $data['action']             =       'updated';
+        $data['module']             =       'role';
+        $data['object']             =       $role;
+        saveLogs($data);
+        $role->delete();
         Session::flash('success', 'data deleted successfully');
         return redirect(route('role.index'));
     }

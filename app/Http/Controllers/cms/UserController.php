@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Mail\UserCreate;
 use App\Mail\UserDelete;
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -45,12 +46,17 @@ class UserController extends Controller
                     return $image;
                 }
             })
+            ->addColumn('assign_role', content: function($data){
+                $assignRoleUrl = route('assignRole', ['id' => $data->id]);
+                $assignRoleBtn = '<a href="' . $assignRoleUrl . '"><i class="fa fa-edit"></i><a>';
+                return $assignRoleBtn;
+            })
             ->addColumn('action', function($data){
                 $editUrl = route('user.edit', ['user' => $data->id]);
                 $editBtn = '<a href="' . $editUrl . '"><i class="fa fa-edit"></i><a>';
                 return $editBtn;
             })
-            ->rawColumns(['profile','action'])
+            ->rawColumns(['profile','action','assign_role'])
             ->make(true);
         }
         return view('cms.user.index');
@@ -173,8 +179,41 @@ class UserController extends Controller
         {
             File::delete("uploads/profile/" . $user->profile_pic);
         }
+
+        $data['message']            =       auth()->user()->name." has deleted $user->name account";
+        $data['action']             =       'deleted';
+        $data['module']             =       'user';
+        $data['object']             =       $user;
+        saveLogs($data);
+
         $user->delete();
         Session::flash('success','data deleted');
         return redirect(route('user.index'));
+    }
+
+    public function assignRole($id)
+    {
+        $data['user'] = User::find($id);
+        if(empty($data['user'])){
+            Session::flash('error','data not found in assign role');
+            return redirect(route('user.index'));
+        }
+        $data['roles'] = Role::pluck('name','id')->toArray();
+
+        return view('cms.user.assignRole', $data);
+
+    }
+    public function submitRole(Request $request)
+    {
+        // dd($request);
+        $user = User::find($request->id);
+        if(empty($user)){
+            Session::flash('error', 'data not found in submit role');
+            return redirect(route('user.index'));
+        }
+        $user->roles()->sync($request->role_id);
+        Session::flash('success', 'assign role success');
+        return back();
+
     }
 }

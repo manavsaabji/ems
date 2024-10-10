@@ -40,6 +40,11 @@ class PermissionController extends Controller
         $permission->name = $request->name;
         $permission->module_id = $request->module_id;
         $permission->save();
+        $data['message']            =       auth()->user()->name." has created $permission->name permission";
+        $data['action']             =       'created';
+        $data['module']             =       'permission';
+        $data['object']             =       $permission;
+        saveLogs($data);
         Session::flash('success', 'data saved');
         return redirect(route('permission.index'));
     }
@@ -81,6 +86,11 @@ class PermissionController extends Controller
         $permission->name = $request->name;
         $permission->module_id = $request->module_id;
         $permission->update();
+        $data['message']            =       auth()->user()->name." has updated $permission->name permission";
+        $data['action']             =       'updated';
+        $data['module']             =       'permission';
+        $data['object']             =       $permission;
+        saveLogs($data);
         Session::flash('success', 'data updated');
         return redirect(route('permission.index'));
     }
@@ -95,6 +105,13 @@ class PermissionController extends Controller
             Session::flash('error','data not found');
             return redirect(route('permission.index'));
         }
+
+        $data['message']            =       auth()->user()->name." has deleted $permission->name permission";
+        $data['action']             =       'deleted';
+        $data['module']             =       'permission';
+        $data['object']             =       $permission;
+        saveLogs($data);
+
         $permission->delete();
         Session::flash('success', 'data deleted');
         return redirect(route('permission.index'));
