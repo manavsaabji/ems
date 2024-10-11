@@ -11,7 +11,7 @@ class ModuleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,13 @@ class ModuleRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = 0;
+        if(request()->has('id'))
+        {
+            $id = request()->id;
+        }
         return [
-            'name' => 'required|max:255',
+            'name'=> "required|unique:modules,name,$id,id|max:255",
         ];
     }
 }

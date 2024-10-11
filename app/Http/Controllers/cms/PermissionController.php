@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\cms;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PermissionRequest;
 use App\Models\Module;
 use App\Models\Permission;
 use Illuminate\Http\Request;
@@ -63,8 +64,15 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PermissionRequest $request)
     {
+        $duplicate = Permission::where('module_id',$request->module_id)
+        ->where('name',strtolower($request->name))->exists();
+
+        if($duplicate){
+            Session::flash('error', 'data already exists');
+            return back();
+        }
         $permission = new Permission();
         $permission->name = $request->name;
         $permission->module_id = $request->module_id;
@@ -105,8 +113,14 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PermissionRequest $request, string $id)
     {
+        $duplicate = Permission::where('id','<>',$request->id)->where('module_id',$request->module_id)
+        ->where('name',strtolower($request->name))->exists();
+        if($duplicate){
+            Session::flash('error', 'data already exists');
+            return back();
+        }
         $permission = Permission::find($id);
         if(empty($permission)){
             Session::flash('error','data not found');

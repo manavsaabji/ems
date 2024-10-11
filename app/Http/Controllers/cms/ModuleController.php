@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\cms;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ModuleRequest;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -61,7 +62,7 @@ class ModuleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ModuleRequest $request)
     {
         $module = new Module();
         $module->name = $request->name;
@@ -100,7 +101,7 @@ class ModuleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ModuleRequest $request, string $id)
     {
         $module = Module::find($id);
         if(empty($module)){

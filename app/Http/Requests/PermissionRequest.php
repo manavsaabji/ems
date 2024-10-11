@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Permission;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PermissionRequest extends FormRequest
@@ -11,7 +12,7 @@ class PermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,9 +22,14 @@ class PermissionRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = 0;
+        if(request()->has('module_id'))
+        {
+            $id = request()->module_id;
+        }
         return [
             'name' => 'required|max:255',
-            'module_id' => 'required'
+            'module_id'=> "required",
         ];
     }
 }
