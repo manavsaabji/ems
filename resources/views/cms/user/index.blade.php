@@ -36,6 +36,7 @@
                             <th>Profile</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Roles</th>
                             <th>Assign role</th>
                             <th>Action</th>
                         </tr>
@@ -86,11 +87,15 @@
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
                     },
                     {
                         data: 'email',
                         name: 'email'
+                    },
+                    {
+                        data: 'roles',
+                        name: 'roles'
                     },
                     {
                         data: 'assign_role',

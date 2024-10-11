@@ -29,7 +29,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'email'=> "required|unique:users,email,$id,id|max:255",
-            'profile_pic' => 'required|image|mimes:jpeg,png|max:2048',
+            'profile_pic' => 'image|mimes:jpeg,png|max:2048',
         ];
     }
 }

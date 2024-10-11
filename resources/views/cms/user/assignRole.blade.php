@@ -28,11 +28,14 @@
         </div>
         <div class="card-body">
             <input type="hidden" name="id" value={{ $user->id }}>
-
+            @php
+                $assignRoles = $user->roles->isEmpty() ? [] : $user->roles->pluck('name','id')->toArray();
+                // dd($assignRoles);
+            @endphp
             @foreach($roles as $id => $name)
                 {{-- {{ dd($roles) }} --}}
-                {!! Form::label('role_id[]', $name) !!}
-                <input name="role_id[]" class="checkbox" type="checkbox" id="chkbox_a1" value="{{ $id }}"><br>
+                {!! Form::label('role_id[]', ucFirst($name)) !!}
+                <input name="role_id[]" class="checkbox" type="checkbox" id="chkbox_a1" value="{{ $id }}" {{ array_key_exists($id, $assignRoles) ? 'checked' : null }}><br>
             @endforeach
         </div>
         <!-- /.card-body -->

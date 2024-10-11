@@ -35,11 +35,12 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <th>Module</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($permissions as $permission)
+                        {{-- @foreach ($permissions as $permission)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $permission->name }}</td>
@@ -54,11 +55,51 @@
                                             </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
             </div>
 
         </div>
     </div>
+@endsection
+
+
+
+@section('footerScripts')
+    <script>
+        $(document).ready(function(){
+            $('#table').DataTable({
+                    "responsive": true,
+                    "processing": true,
+                    "serverSide": true,
+                    ajax:"{{ route('permission.index') }}",
+                    order:[],
+                    sorting:true,
+                    columns:[
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'index',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                    },
+                    {
+                        data: 'module',
+                        name: 'module',
+                    },
+                    {
+                        data:'action',
+                        name:'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    ],
+
+            });
+        });
+    </script>
 @endsection

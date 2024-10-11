@@ -35,11 +35,12 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <th>Permissions</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($modules as $module)
+                        {{-- @foreach ($modules as $module)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $module->name }}</td>
@@ -54,7 +55,7 @@
                                             </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
             </div>
@@ -62,3 +63,43 @@
         </div>
     </div>
 @endsection
+
+
+@section('footerScripts')
+    <script>
+        $(document).ready(function(){
+            $('#table').DataTable({
+                    "responsive": true,
+                    "processing": true,
+                    "serverSide": true,
+                    ajax:"{{ route('module.index') }}",
+                    order:[],
+                    sorting:true,
+                    columns:[
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'index',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                    },
+                    {
+                        data: 'permissions',
+                        name: 'permissions',
+                    },
+                    {
+                        data:'action',
+                        name:'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    ],
+
+            });
+        });
+    </script>
+@endsection
+

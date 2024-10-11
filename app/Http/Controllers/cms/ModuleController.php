@@ -6,16 +6,45 @@ use App\Http\Controllers\Controller;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\Facades\DataTables;
 
 class ModuleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data['modules'] = Module::all();
-        return view('cms.module.index', $data);
+        if($request->ajax())
+        {
+            $data  = Module::select('*')->with('permissions');
+            return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('permissions', function($data){
+                if($data->permissions->isEmpty()){
+                    return 'N/A';
+                }
+                $permissions =  $data->permissions->pluck('name','name')->toArray();
+                return implode(', ', $permissions);
+            })
+            ->addColumn('action', function($data){
+                $editUrl = route('module.edit', ['module' => $data->id]);
+                $deleteUrl = route('module.destroy', ['module' => $data->id]);
+
+                $btnEdit = '<a href="'. $editUrl .'"><i class="fa fa-edit"></i><a>';
+                $btnDelete = '<form action="'. $deleteUrl .'"method="POST">
+                              '.csrf_field().'
+                              '.method_field("DELETE").'
+                              <button type="submit" style="background-color: transparent;border:0px"><i class="fa fa-trash text-red"></i></button>
+                              </form>';
+                $allBtns = '<div style="display:flex;">' . $btnEdit.$btnDelete . '</div>';
+                return $allBtns;
+            })
+            ->rawColumns(['action','permissions'])
+            ->make(true);
+        }
+        // $data['modules'] = Module::all();
+        return view('cms.module.index');
     }
 
     /**

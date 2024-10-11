@@ -28,7 +28,7 @@ class UserController extends Controller
         {
 
             // select(..)->whereNotIn('book_price', [100,200])->get();
-            $data  = User::select('*')->where('id','<>',auth()->user()->id);
+            $data  = User::select('*')->with('roles')->where('id','<>',auth()->user()->id);
             return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('profile', function($data){
@@ -46,6 +46,15 @@ class UserController extends Controller
                     return $image;
                 }
             })
+            ->addColumn('roles', function($data){
+                if($data->roles->isEmpty())
+                {
+                    return 'N/A';
+                }
+
+                $roles = $data->roles->pluck('name','name')->toArray();
+                return implode(', ', $roles);
+            })
             ->addColumn('assign_role', content: function($data){
                 $assignRoleUrl = route('assignRole', ['id' => $data->id]);
                 $assignRoleBtn = '<a href="' . $assignRoleUrl . '"><i class="fa fa-edit"></i><a>';
@@ -56,7 +65,7 @@ class UserController extends Controller
                 $editBtn = '<a href="' . $editUrl . '"><i class="fa fa-edit"></i><a>';
                 return $editBtn;
             })
-            ->rawColumns(['profile','action','assign_role'])
+            ->rawColumns(['profile','action','assign_role','roles'])
             ->make(true);
         }
         return view('cms.user.index');
@@ -193,7 +202,7 @@ class UserController extends Controller
 
     public function assignRole($id)
     {
-        $data['user'] = User::find($id);
+        $data['user'] = User::with('roles')->find($id);
         if(empty($data['user'])){
             Session::flash('error','data not found in assign role');
             return redirect(route('user.index'));
@@ -212,6 +221,12 @@ class UserController extends Controller
             return redirect(route('user.index'));
         }
         $user->roles()->sync($request->role_id);
+
+        $data['message']            =       auth()->user()->name." has assign role $user->name";
+        $data['action']             =       'assign role';
+        $data['module']             =       'user';
+        $data['object']             =       $user;
+        saveLogs($data);
         Session::flash('success', 'assign role success');
         return back();
 
