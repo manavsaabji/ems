@@ -4,19 +4,46 @@ namespace App\Http\Controllers\cms;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data['roles'] = Role::all();
-        return view('cms.role.index', $data);
+        if($request->ajax())
+        {
+            $data  = Role::select('*');
+            return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('assign_permission', function($data){
+                $assignUrl = route('assignPermission', ['id' => $data->id]);
+                $btnAssign = '<a href="'. $assignUrl .'"><i class="fa fa-edit"></i><a>';
+                return $btnAssign;
+            })
+            ->addColumn('action', function($data){
+                $editUrl = route('role.edit', ['role' => $data->id]);
+                $deleteUrl = route('role.destroy', ['role' => $data->id]);
+
+                $btnEdit = '<a href="'. $editUrl .'"><i class="fa fa-edit"></i><a>';
+                $btnDelete = '<form action="'. $deleteUrl .'"method="POST">
+                              '.csrf_field().'
+                              '.method_field("DELETE").'
+                              <button type="submit" style="background-color: transparent;border:0px"><i class="fa fa-trash text-red"></i></button>
+                              </form>';
+                $allBtns = '<div style="display:flex;">' . $btnEdit.$btnDelete . '</div>';
+                return $allBtns;
+            })
+            ->rawColumns(['action','assign_permission'])
+            ->make(true);
+        }
+        return view('cms.role.index');
     }
 
     /**
@@ -110,4 +137,33 @@ class RoleController extends Controller
         Session::flash('success', 'data deleted successfully');
         return redirect(route('role.index'));
     }
+    public function assignPermission($id){
+
+        $data['role'] = Role::with('permissions')->find($id);
+        if(empty($data['role'])){
+            Session::flash('error', 'data not found');
+            return back();
+        }
+        $data['permissions'] = Permission::with('module')->get()->groupBy('module.name');
+        // dd($data['permissions']);
+        return view('cms.role.assignPermission', $data);
+    }
+
+    public function submitPermission(Request $request){
+        $role = Role::find($request->id);
+        if(empty($role)){
+            Session::flash('error', 'data not found');
+            return redirect(route('role.index'));
+        }
+        $role->permissions()->sync($request->permission_id);
+
+        $data['message']            =       auth()->user()->name." has assign permission $role->name";
+        $data['action']             =       'assign permission';
+        $data['module']             =       'role';
+        $data['object']             =       $role;
+        saveLogs($data);
+        Session::flash('success', 'assign permission success');
+        return back();
+    }
+
 }

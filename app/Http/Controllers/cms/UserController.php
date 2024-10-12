@@ -210,8 +210,8 @@ class UserController extends Controller
         $data['roles'] = Role::pluck('name','id')->toArray();
 
         return view('cms.user.assignRole', $data);
-
     }
+
     public function submitRole(Request $request)
     {
         // dd($request);

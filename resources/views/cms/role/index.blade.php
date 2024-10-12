@@ -35,11 +35,12 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <th>Assign Permission</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($roles as $role)
+                        {{-- @foreach ($roles as $role)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $role->name }}</td>
@@ -54,11 +55,51 @@
                                             </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
             </div>
 
         </div>
     </div>
+@endsection
+
+@section('footerScripts')
+    <script>
+        $(document).ready(function(){
+            $('#table').DataTable({
+                    "responsive": true,
+                    "processing": true,
+                    "serverSide": true,
+                    ajax:"{{ route('role.index') }}",
+                    order:[],
+                    sorting:true,
+                    columns:[
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'index',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                    },
+                    {
+                        data: 'assign_permission',
+                        name: 'assign_permission',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data:'action',
+                        name:'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    ],
+
+            });
+        });
+    </script>
 @endsection
