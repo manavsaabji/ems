@@ -37,7 +37,7 @@
                 {!! Form::email('email', null, ['class' => 'form-control', 'required']) !!}
             </div>
             <div class="custom-file">
-                {!! Form::file('profile_pic', ['class' => 'custom-file-input','id' => 'profile_pic', 'required']) !!}
+                {!! Form::file('profile_pic', ['class' => 'custom-file-input','id' => 'profile_pic']) !!}
                 {!! Form::label('profile_pic','Choose file',['class' => 'custom-file-label']) !!}
             </div>
             @if (!empty($object->id))

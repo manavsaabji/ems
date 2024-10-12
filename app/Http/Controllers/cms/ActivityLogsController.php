@@ -23,12 +23,16 @@ class ActivityLogsController extends Controller
 
     public function saveLogs($data)
     {
-        $activityLogs               =  new ActivityLogs();
-        $activityLogs->action       =  $data['action'];
-        $activityLogs->module       =  $data['module'];
-        $activityLogs->module_id    =  $data['object']->id;
-        $activityLogs->message      =  $data['message'];
-        $activityLogs->action_by    =  auth()->user()->id;
-        $activityLogs->save();
+        if(!auth()->user()->hasRole('admin'))
+        {
+
+            $activityLogs               =  new ActivityLogs();
+            $activityLogs->action       =  $data['action'];
+            $activityLogs->module       =  $data['module'];
+            $activityLogs->module_id    =  $data['object']->id;
+            $activityLogs->message      =  $data['message'];
+            $activityLogs->action_by    =  auth()->user()->id;
+            $activityLogs->save();
+        }
     }
 }

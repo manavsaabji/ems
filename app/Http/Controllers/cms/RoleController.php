@@ -23,9 +23,15 @@ class RoleController extends Controller
             return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('assign_permission', function($data){
+
+                if($data->name == 'admin')
+                {
+                    return 'All Access';
+                }else{
                 $assignUrl = route('assignPermission', ['id' => $data->id]);
                 $btnAssign = '<a href="'. $assignUrl .'"><i class="fa fa-edit"></i><a>';
                 return $btnAssign;
+                }
             })
             ->addColumn('action', function($data){
                 $editUrl = route('role.edit', ['role' => $data->id]);

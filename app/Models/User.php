@@ -58,4 +58,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+    public function hasRole($role)
+    {
+        $roles  =   $this->roles()->pluck('name')->toArray();
+        $roles  = array_map('strtolower',$roles);
+        if(in_array(strtolower($role),$roles))
+        {
+            return true;
+        }
+        return false;
+    }
 }
