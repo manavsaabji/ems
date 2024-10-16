@@ -8,6 +8,15 @@
     border: 1px solid #ccc;
     /* scrollbar-width: none; */
 }
+/*
+input.form-control, button {
+    width: calc(100% - 40%);
+    padding-left: 20%;
+    padding-right: 20%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+} */
+
 </style>
 @endsection
 @section('content')
@@ -46,7 +55,23 @@
                 {!! Form::label(null, 'Email') !!}
                 : <span>{{ $user->email }}</span>
             </div>
-
+            <div class="card card-primary" style="display: none;" id="passwordSection">
+                <div class="card-body">
+                <button id="passwordChangeBtn" style="border-radius: 10px; width: 50%; display: block; margin: 0 auto; background-color:mediumturquoise"  type="button">Reset Password</button>
+                    <!-- Div for password change bar -->
+                    <div style="display: none;" id="passwordChangeBar">
+                        <h3>Change Password</h3>
+                        <div class="form-group">
+                            {!! Form::label('password', 'Password') !!}
+                            {!! Form::password('password', ['class' => 'form-control']) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('confirm_password', 'Confirm Password') !!}
+                            {!! Form::password('confirm_password', ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group">
                 {!! Form::label('address', 'Address') !!}
@@ -104,6 +129,15 @@
 @section('footerScripts')
 
 <script>
+
+    if ('{{ session()->has('password entry') }}'){
+        document.getElementById('passwordChangeBar').style.display = 'block';
+        document.getElementById('passwordChangeBtn').style.display = 'none';
+    }
+    document.getElementById('passwordSection').style.display = 'block';
+
+
+
     function handleFileSelect(inputElement, viewerElement) {
         const file = inputElement.files[0];
 
@@ -141,6 +175,25 @@
 
     document.getElementById('pdf-bankDoc').addEventListener('change', function() {
         handleFileSelect(this, document.getElementById('bankDoc-viewer'));
+    });
+
+    // Get references to the button and the password change bar
+    const passwordChangeBtn = document.getElementById('passwordChangeBtn');
+    const passwordChangeBar = document.getElementById('passwordChangeBar');
+
+    // Default state: hidden
+    let isVisible = false;
+
+    // Add click event listener to the button
+    passwordChangeBtn.addEventListener('click', function() {
+        // Toggle visibility state
+        isVisible = !isVisible;
+
+        // Show the password change bar and hide the button
+        if (isVisible) {
+            passwordChangeBar.style.display = 'block'; // Show the bar
+            passwordChangeBtn.style.display = 'none'; // Hide the button
+        }
     });
 </script>
 

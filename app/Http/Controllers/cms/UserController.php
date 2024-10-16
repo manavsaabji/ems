@@ -288,8 +288,42 @@ class UserController extends Controller
         }
 
         $user->employee->update();
+
+        $resetPassword = false;
+        if($request->password || $request->confirm_password){
+            $password = $request->password;
+            $confirm_password = $request->confirm_password;
+            if ($password !== $confirm_password) {
+                Session::flash('error', 'Passwords do not match.');
+                Session::flash('password entry');
+                return back();
+            }
+            elseif (strlen($password) < 8) {
+                Session::flash('error', 'Password must be at least 8 characters long.');
+                Session::flash('password entry');
+                return back();
+            }
+            // Check for password strength: at least one uppercase, lowercase, number, and special character
+            elseif (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) ||
+                    !preg_match('/[0-9]/', $password) || !preg_match('/[\W]/', $password)) {
+                    Session::flash('error', 'Password must contain at least one uppercase, lowercase, number, and special character.');
+                    Session::flash('password entry');
+                    return back();
+            }
+            else {
+                Session::flash('success', 'Password Reset Successfully');
+                $user->password = Hash::make($password);
+                $resetPassword = true;
+            }
+        }
+        $user->update();
+
+        $message = '';
+        if($resetPassword === true){
+            $message = 'and password reset success';
+        }
         Session::flash('success','Profile updated');
-        $data['message']            =       auth()->user()->name." profile updated";
+        $data['message']            =       auth()->user()->name . " profile updated" . $message;
         $data['action']             =       'update profile';
         $data['module']             =       'user';
         $data['object']             =       $user;
