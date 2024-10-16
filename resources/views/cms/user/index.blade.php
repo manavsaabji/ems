@@ -38,6 +38,7 @@
                             <th>Email</th>
                             <th>Roles</th>
                             <th>Assign role</th>
+                            <th>Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -100,6 +101,12 @@
                     {
                         data: 'assign_role',
                         name: 'assign_role',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'details',
+                        name: 'details',
                         orderable: false,
                         searchable: false
                     },

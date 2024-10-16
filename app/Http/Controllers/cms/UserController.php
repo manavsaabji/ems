@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Mail\UserCreate;
 use App\Mail\UserDelete;
+use App\Models\Employee;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -28,7 +29,8 @@ class UserController extends Controller
         {
 
             // select(..)->whereNotIn('book_price', [100,200])->get();
-            $data  = User::select('*')->with('roles')->where('id','<>',auth()->user()->id);
+            $data  = User::select('*')->with(['roles','employee'])->where('id','<>',auth()->user()->id);
+
             return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('profile', function($data){
@@ -60,12 +62,17 @@ class UserController extends Controller
                 $assignRoleBtn = '<a href="' . $assignRoleUrl . '"><i class="fa fa-edit"></i><a>';
                 return $assignRoleBtn;
             })
+            ->addColumn('details', function($data){
+                $detailsUrl = route('employee.edit', ['employee' => $data->employee->id]);
+                $detailsBtn = '<a href="' . $detailsUrl . '"><i class="fa fa-edit"></i><a>';
+                return $detailsBtn;
+            })
             ->addColumn('action', function($data){
                 $editUrl = route('user.edit', ['user' => $data->id]);
                 $editBtn = '<a href="' . $editUrl . '"><i class="fa fa-edit"></i><a>';
                 return $editBtn;
             })
-            ->rawColumns(['profile','action','assign_role','roles'])
+            ->rawColumns(['profile','roles','assign_role','details','action'])
             ->make(true);
         }
         return view('cms.user.index');
@@ -101,6 +108,11 @@ class UserController extends Controller
         }
         $user->is_active = 1;
         $user->save();
+
+        $employee    = new Employee();
+        $employee->user_id   = $user->id;
+        $employee->save();
+
         Mail::to($user->email)->send(new UserCreate($user,$randomPassword));
 
         $data['message']            =       auth()->user()->name." has created $user->name account";
@@ -230,5 +242,58 @@ class UserController extends Controller
         Session::flash('success', 'assign role success');
         return back();
 
+    }
+
+    public function editProfile(){
+        $id = auth()->user()->id;
+        $data['user'] = User::with('employee')->find($id);
+        return view('cms.employee.editProfile', $data);
+    }
+
+    public function submitProfile(Request $request){
+        $id = auth()->user()->id;
+        $user = User::with('employee')->find($id);
+        $user->employee->address = $request->address;
+        $user->employee->city = $request->city;
+        $user->employee->phone_no = $request->phone_no;
+
+        if($request->has('addhar_card')){
+            if(file_exists('uploads/addhar_card/'. $user->employee->addhar_card)){
+                File::delete('uploads/addhar_card/'. $user->employee->addhar_card);
+            }
+
+            // dd($request->addhar_card);
+            $fileName = 'addhar_card_' . Carbon::now()->timestamp .'.'. $request->addhar_card->getClientOriginalExtension();
+            // dd($request->addhar_card);
+            $request->file('addhar_card')->move(public_path('uploads/addhar_card/'), $fileName);
+            $user->employee->addhar_card = $fileName;
+        }
+        if($request->has('pan_card')){
+            if(file_exists('uploads/pan_card/'. $user->employee->pan_card)){
+                File::delete('uploads/pan_card/'. $user->employee->pan_card);
+            }
+
+            $fileName = 'pan_card_' . Carbon::now()->timestamp .'.'. $request->pan_card->getClientOriginalExtension();
+            $request->file('pan_card')->move(public_path('uploads/pan_card/'), $fileName);
+            $user->employee->pan_card = $fileName;
+        }
+        if($request->has('bank_document')){
+            if(file_exists('uploads/bank_document/'. $user->employee->bank_document)){
+                File::delete('uploads/bank_document/'. $user->employee->bank_document);
+            }
+
+            $fileName = 'bank_document_' . Carbon::now()->timestamp .'.'. $request->bank_document->getClientOriginalExtension();
+            $request->file('bank_document')->move(public_path('uploads/bank_document/'), $fileName);
+            $user->employee->bank_document = $fileName;
+        }
+
+        $user->employee->update();
+        Session::flash('success','Profile updated');
+        $data['message']            =       auth()->user()->name." profile updated";
+        $data['action']             =       'update profile';
+        $data['module']             =       'user';
+        $data['object']             =       $user;
+        saveLogs($data);
+        return redirect(route('dashboard'));
     }
 }

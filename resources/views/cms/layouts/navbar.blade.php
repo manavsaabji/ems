@@ -97,17 +97,19 @@
             <i class="fa fa-user"></i>
         </a>
         <div class="p-2 text-right dropdown-menu dropdown-menu-lg dropdown-menu-right">
+
             {{-- <a href="#" class="dropdown-item"> --}}
-                <form method="POST" action="{{ route('logout') }}">
+            {{-- </a> --}}
+            <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-dropdown-link :href="route('logout')"
+                    <a  class="dropdown-item" href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-dropdown-link>
-                </form>
-            {{-- </a> --}}
+                        Log Out
+                    </a>
+            </form>
+            <a class="dropdown-item" href="{{ route('editProfile') }}">Profile<a>
 
         </div>
       </li>

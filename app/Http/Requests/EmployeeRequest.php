@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoleRequest extends FormRequest
+class EmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,13 +21,10 @@ class RoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = 0;
-        if(request()->has('id'))
-        {
-            $id = request()->id;
-        }
         return [
-            'name' => 'required|unique:roles,name,$id,id|max:255',
+            'addhar_card' => 'file|mimes:pdf|max:2048',
+            'pan_card' => 'file|mimes:pdf|max:2048',
+            'bank_document' => 'file|mimes:pdf|max:2048',
         ];
     }
 }
