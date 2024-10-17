@@ -78,7 +78,13 @@
                         </li>
                     </ul>
                 </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('department.index') }}"
+                        class="nav-link @if (Route::currentRouteName() == 'department.index') active @endif">
+                        <i class="fas fa-circle nav-icon"></i>
+                        <p>Department List</p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('activityLogs') }}" class="nav-link  @if(Route::currentRouteName() == 'activityLogs') active @endif">
                         <i class="fas fa-circle nav-icon"></i>

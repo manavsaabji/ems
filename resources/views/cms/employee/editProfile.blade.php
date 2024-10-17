@@ -55,6 +55,8 @@ input.form-control, button {
                 {!! Form::label(null, 'Email') !!}
                 : <span>{{ $user->email }}</span>
             </div>
+
+
             <div class="card card-primary" style="display: none;" id="passwordSection">
                 <div class="card-body">
                 <button id="passwordChangeBtn" style="border-radius: 10px; width: 50%; display: block; margin: 0 auto; background-color:mediumturquoise"  type="button">Reset Password</button>

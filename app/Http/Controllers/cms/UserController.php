@@ -29,10 +29,16 @@ class UserController extends Controller
         {
 
             // select(..)->whereNotIn('book_price', [100,200])->get();
-            $data  = User::select('*')->with(['roles','employee'])->where('id','<>',auth()->user()->id);
+            $data  = User::select('*')->with(['roles', 'employee.department'])->where('id','<>',auth()->user()->id);
 
             return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('department', function($data){
+                if(empty($data->employee->department->name)){
+                    return 'N/A';
+                }
+                return $data->employee->department->name;
+            })
             ->addColumn('profile', function($data){
                 if(empty($data->profile_pic)){
                     $emptyUrl = asset('assets/images/user.jpg');
@@ -57,6 +63,7 @@ class UserController extends Controller
                 $roles = $data->roles->pluck('name','name')->toArray();
                 return implode(', ', $roles);
             })
+
             ->addColumn('assign_role', content: function($data){
                 $assignRoleUrl = route('assignRole', ['id' => $data->id]);
                 $assignRoleBtn = '<a href="' . $assignRoleUrl . '"><i class="fa fa-edit"></i><a>';
@@ -72,7 +79,7 @@ class UserController extends Controller
                 $editBtn = '<a href="' . $editUrl . '"><i class="fa fa-edit"></i><a>';
                 return $editBtn;
             })
-            ->rawColumns(['profile','roles','assign_role','details','action'])
+            ->rawColumns(['department', 'profile','roles','assign_role','details','action'])
             ->make(true);
         }
         return view('cms.user.index');

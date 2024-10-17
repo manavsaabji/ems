@@ -12,7 +12,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active"> User List</li>
+                                <li class="breadcrumb-item active"> Department List</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -23,9 +23,10 @@
     <div class="col-md-12">
         <div class="card-primary card-outline card">
             <div class="card-header">
-                <h3 class="card-title">Users list</h3>
+                <h3 class="card-title">Department list</h3>
                 <div class="card-tools">
-                    <a href="{{ route('user.create') }}" class="badge badge-primary"><i class="fa fa-plus"></i>&nbsp; Add</a>
+                    <a href="{{ route('department.create') }}" class="badge badge-primary"><i class="fa fa-plus"></i>&nbsp;
+                        Add</a>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -33,41 +34,35 @@
                 <table id="table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Profile</th>
+                            <th>#</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Department</th>
-                            <th>Roles</th>
-                            <th>Assign role</th>
-                            <th>Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                      
+
                     </tbody>
                 </table>
             </div>
 
         </div>
     </div>
-    <div class="row"></div>
 @endsection
+
 
 @section('footerScripts')
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('#table').DataTable({
-                    "responsive": true,
-                    "processing": true,
-                    "serverSide": true,
-                    ajax:"{{ route('user.index') }}",
-                    order:[],
-                    sorting:true,
-                    columns:[
-                        {
-                        data: 'profile',
-                        name: 'profile',
+                "responsive": true,
+                "processing": true,
+                "serverSide": true,
+                ajax: "{{ route('department.index') }}",
+                order: [],
+                sorting: true,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'index',
                         orderable: false,
                         searchable: false
                     },
@@ -76,36 +71,12 @@
                         name: 'name',
                     },
                     {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'department',
-                        name: 'department'
-                    },
-                    {
-                        data: 'roles',
-                        name: 'roles'
-                    },
-                    {
-                        data: 'assign_role',
-                        name: 'assign_role',
+                        data: 'action',
+                        name: 'action',
                         orderable: false,
                         searchable: false
                     },
-                    {
-                        data: 'details',
-                        name: 'details',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data:'action',
-                        name:'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                    ],
+                ],
 
             });
         });

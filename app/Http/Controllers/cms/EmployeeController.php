@@ -4,6 +4,7 @@ namespace App\Http\Controllers\cms;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\Department;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -49,14 +50,14 @@ class EmployeeController extends Controller
     public function edit(string $id)
     {
 
-        $data['object'] = Employee::find($id);
+        $data['object'] = Employee::with('user')->find($id);
         if(empty($data['object'])){
             Session::flash('success','Data not found');
             return redirect(route('user.index'));
         }
         $data['method'] = 'PUT';
         $data['url'] = route('employee.update',['employee'=> $id]);
-
+        $data['department'] = Department::pluck('name', 'id')->toArray();
 
         return view('cms.employee.form', $data);
     }
@@ -76,6 +77,8 @@ class EmployeeController extends Controller
         $employee->city = $request->city;
         $employee->phone_no = $request->phone_no;
         $employee->salary = $request->salary;
+        $employee->department_id = $request->department_id;
+        
         if($request->has('addhar_card')){
             if(file_exists('uploads/addhar_card/'. $employee->addhar_card)){
                 File::delete('uploads/addhar_card/'. $employee->addhar_card);

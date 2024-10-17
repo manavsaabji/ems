@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\cms\ActivityLogsController;
 use App\Http\Controllers\cms\DashboardController;
+use App\Http\Controllers\cms\DepartmentController;
 use App\Http\Controllers\cms\EmployeeController;
 use App\Http\Controllers\cms\ModuleController;
 use App\Http\Controllers\cms\PermissionController;
@@ -18,9 +19,13 @@ Route::get('/dashboard', [DashboardController::class,'dashboard'])->name('dashbo
 
 Route::resource("user", UserController::class);
 Route::resource("role", RoleController::class);
+
 Route::resource("permission", PermissionController::class);
 Route::resource("module", ModuleController::class);
 Route::resource("employee", EmployeeController::class);
+
+Route::resource("department", DepartmentController::class);
+
 
 //Activity Logs
 Route::get('activity-logs',                 [ActivityLogsController::class, 'index'])->name('activityLogs');

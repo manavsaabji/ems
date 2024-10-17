@@ -39,6 +39,16 @@
         <div class="card-body">
             <input type="hidden" name="id" value={{ $object->id }}>
             <div class="form-group">
+                {!! Form::label('name', 'Name') !!} : 
+                <span style="font-size: 20px;"> {{ $object->user->name }} </span>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('department_id', 'Select Department') !!}
+                {!! Form::select('department_id', $department ,null, ['placeholder'=>'Select Department', 'class' => 'form-control']) !!}
+            </div>
+
+            <div class="form-group">
                 {!! Form::label('address', 'Address') !!}
                 {!! Form::text('address', null, ['class' => 'form-control']) !!}
             </div>
