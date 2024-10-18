@@ -78,6 +78,31 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'task.index', 'task.create' ])) menu-open @endif">
+                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'task.index', 'task.create' ])) active @endif">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Task Management
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('task.index') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'task.index') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Task List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('task.create') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'task.create') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Task Create</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('department.index') }}"
                         class="nav-link @if (Route::currentRouteName() == 'department.index') active @endif">

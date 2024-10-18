@@ -39,7 +39,7 @@
         <div class="card-body">
             <input type="hidden" name="id" value={{ $object->id }}>
             <div class="form-group">
-                {!! Form::label('name', 'Name') !!} : 
+                {!! Form::label('name', 'Name') !!} :
                 <span style="font-size: 20px;"> {{ $object->user->name }} </span>
             </div>
 
@@ -93,7 +93,7 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         {!! Form::close() !!}
     </div>
