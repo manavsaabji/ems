@@ -25,7 +25,6 @@ class ActivityLogsController extends Controller
     {
         if(!auth()->user()->hasRole('admin'))
         {
-
             $activityLogs               =  new ActivityLogs();
             $activityLogs->action       =  $data['action'];
             $activityLogs->module       =  $data['module'];

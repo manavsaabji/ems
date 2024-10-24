@@ -110,12 +110,44 @@
                         <p>Department List</p>
                     </a>
                 </li>
+                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create' ])) menu-open @endif">
+                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create' ])) active @endif">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Leave Management
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('leave.index') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'leave.index') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Leave List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('leave.create') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'leave.create') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Leave Create</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('activityLogs') }}" class="nav-link  @if(Route::currentRouteName() == 'activityLogs') active @endif">
                         <i class="fas fa-circle nav-icon"></i>
                         <p>Activity Logs</p>
                     </a>
                 </li>
+
+                {{-- <li class="nav-item">
+                    <a href="{{ route('test') }}" class="nav-link  @if(Route::currentRouteName() == 'test') active @endif">
+                        <i class="fas fa-circle nav-icon"></i>
+                        <p>Test</p>
+                    </a>
+                </li> --}}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

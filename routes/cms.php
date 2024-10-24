@@ -4,12 +4,15 @@ use App\Http\Controllers\cms\ActivityLogsController;
 use App\Http\Controllers\cms\DashboardController;
 use App\Http\Controllers\cms\DepartmentController;
 use App\Http\Controllers\cms\EmployeeController;
+use App\Http\Controllers\cms\LeaveController;
 use App\Http\Controllers\cms\ModuleController;
 use App\Http\Controllers\cms\PermissionController;
 use App\Http\Controllers\cms\RoleController;
 use App\Http\Controllers\cms\TaskController;
+use App\Http\Controllers\cms\TestController;
 use App\Http\Controllers\cms\UserController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -27,6 +30,7 @@ Route::resource("employee", EmployeeController::class);
 
 Route::resource("department", DepartmentController::class);
 Route::resource("task", TaskController::class);
+Route::resource("leave", LeaveController::class);
 
 
 //Activity Logs
@@ -42,5 +46,5 @@ Route::post('submit-permission/', [RoleController::class, 'submitPermission'])->
 Route::get('edit-profile/', [UserController::class, 'editProfile'])->name('editProfile');
 Route::put('submit-profile/', [UserController::class, 'submitProfile'])->name('submitProfile');
 
-
+Route::get('leave-cancel/{id}', [LeaveController::class, 'leaveCancel'])->name('leaveCancel');
 

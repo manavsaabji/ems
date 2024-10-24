@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Employee;
+use App\Models\Leave;
 use App\Models\Role;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -80,6 +81,10 @@ class User extends Authenticatable
     public function tasks():HasMany
     {
         return $this->hasMany(Task::class);
+    }
+    public function leaves():HasMany
+    {
+        return $this->hasMany(Leave::class);
     }
 
 }
