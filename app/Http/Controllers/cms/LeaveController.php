@@ -34,17 +34,24 @@ class LeaveController extends Controller
                 }
             })
             ->addColumn('action', function($data){
-                if(auth()->user()->hasRole('admin')){
+                $buttons = '';
+                if(auth()->user()->hasRole('admin') && auth()->user()->id != $data->user->id){
                     $editUrl = route('leave.edit', ['leave' => $data->id]);
                     $editBtn = '<a href="' . $editUrl . '"><i class="fa fa-edit"></i><a>';
-                    return $editBtn;
-                }else{
+                    $buttons .= $editBtn;
+                }
+                if(auth()->user()->id == $data->user->id){
                     if($data->status == 'pending'){
                         $cancleUrl = route('leaveCancel', ['id' => $data->id]);
-                        $editBtn = '<a href="' . $cancleUrl . '">CANCEL<a>';
-                        return $editBtn;
+                        $btnCancel = '<form action="'. $cancleUrl .'"method="POST">
+                              '.csrf_field().'
+                              <button type="submit" style="background-color: transparent;border:0px"><a>CANCEL<a></button>
+                              </form>';
+                        $buttons .= $btnCancel;
                     }
                 }
+                $allBtns = '<div style="display:flex;">' . $buttons . '</div>';
+                return $allBtns;
 
             })
             ->rawColumns(['user', 'action'])
@@ -89,13 +96,13 @@ class LeaveController extends Controller
                                   ->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
                         })
                         ->get();
+
         if($request->leave_duration == 'first half' || $request->leave_duration == 'second half'){
             $object = $object->whereIn('leave_duration',['full day', $request->leave_duration])->isEmpty();
         }else{
             $object = $object->isEmpty();
         }
 
-        // dd($object);
         if (!$object) {
             return back()->withErrors(['dates' => 'You are filling in the same date again. please check the start date and end date.']);
         }
@@ -184,5 +191,23 @@ class LeaveController extends Controller
         Session::flash('success', 'leave Cancel successfully');
         return redirect(route('leave.index'));
     }
+
+    public function leaveIndexAll(Request $request)
+    {
+        if(auth()->user()->hasRole('admin')){
+            if($request->ajax()){
+                $data  = Leave::select('*')->with('user')->orderBy('start_date','DESC');
+                return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('user', function($data){
+                    return $data->user->name ?? 'N/A';
+                })
+                ->rawColumns(['user'])
+                ->make(true);
+            }
+            return view('cms.leave.indexAll');
+        }
+    }
+
 
 }

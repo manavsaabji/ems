@@ -35,7 +35,7 @@ Route::resource("leave", LeaveController::class);
 
 //Activity Logs
 Route::get('activity-logs',                 [ActivityLogsController::class, 'index'])->name('activityLogs');
-
+Route::get('leave-all-index',                 [LeaveController::class, 'leaveIndexAll'])->name('leaveIndexAll');
 Route::get('assign-role/{id}', [UserController::class, 'assignRole'])->name('assignRole');
 Route::post('submit-role/', [UserController::class, 'submitRole'])->name('submitRole');
 
@@ -46,5 +46,4 @@ Route::post('submit-permission/', [RoleController::class, 'submitPermission'])->
 Route::get('edit-profile/', [UserController::class, 'editProfile'])->name('editProfile');
 Route::put('submit-profile/', [UserController::class, 'submitProfile'])->name('submitProfile');
 
-Route::get('leave-cancel/{id}', [LeaveController::class, 'leaveCancel'])->name('leaveCancel');
-
+Route::post('leave-cancel/{id}', [LeaveController::class, 'leaveCancel'])->name('leaveCancel');

@@ -12,7 +12,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active"> Leave List</li>
+                                <li class="breadcrumb-item active"> Leave History</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -23,7 +23,7 @@
     <div class="col-md-12">
         <div class="card-primary card-outline card">
             <div class="card-header">
-                <h3 class="card-title">Leave list</h3>
+                <h3 class="card-title">Leave History</h3>
 
             </div>
             <!-- /.card-header -->
@@ -32,16 +32,13 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            @if(auth()->user()->hasRole('admin'))
                             <th>User Name</th>
-                            @endif
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Leave Duration</th>
                             <th>Leave Type</th>
                             <th>Reason</th>
                             <th>Status</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,7 +59,7 @@
                 "responsive": true,
                 "processing": true,
                 "serverSide": true,
-                ajax: "{{ route('leave.index') }}",
+                ajax: "{{ route('leaveIndexAll') }}",
                 order: [],
                 sorting: true,
                 columns: [{
@@ -71,14 +68,10 @@
                         orderable: false,
                         searchable: false
                     },
-
-                    @if(auth()->user()->hasRole('admin'))
                     {
                         data: 'user',
                         name:'user',
                     },
-                    @endif
-
                     {
                         data: 'start_date',
                         name:'start_date',
@@ -102,10 +95,6 @@
                     {
                         data: 'status',
                         name:'status',
-                    },
-                    {
-                        data: 'action',
-                        name:'action',
                     },
 
                 ],

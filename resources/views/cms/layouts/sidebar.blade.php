@@ -110,8 +110,8 @@
                         <p>Department List</p>
                     </a>
                 </li>
-                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create' ])) menu-open @endif">
-                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create' ])) active @endif">
+                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create', 'leaveIndexAll' ])) menu-open @endif">
+                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create', 'leaveIndexAll' ])) active @endif">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Leave Management
@@ -119,6 +119,15 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        @if(auth()->user()->hasRole('admin'))
+                        <li class="nav-item">
+                            <a href="{{ route('leaveIndexAll') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'leaveIndexAll') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Leave History</p>
+                            </a>
+                        </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('leave.index') }}"
                                 class="nav-link @if (Route::currentRouteName() == 'leave.index') active @endif">
@@ -142,12 +151,7 @@
                     </a>
                 </li>
 
-                {{-- <li class="nav-item">
-                    <a href="{{ route('test') }}" class="nav-link  @if(Route::currentRouteName() == 'test') active @endif">
-                        <i class="fas fa-circle nav-icon"></i>
-                        <p>Test</p>
-                    </a>
-                </li> --}}
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
