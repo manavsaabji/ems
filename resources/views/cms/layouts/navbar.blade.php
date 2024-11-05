@@ -5,7 +5,22 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+        <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        @php
+            $todayLeave     =   \App\Models\Leave::where('user_id',auth()->user()->id)
+                                                    ->where('start_date',\Carbon\Carbon::now()->toDateString())
+                                                    ->where('status','approved')->first();
+        @endphp
+        @if (!empty($todayLeave))
+            <span class="badge-success badge">You are on leave today</span>
+        @else
+
+            <button style="display: none;" id="attendancePunchIn" class="nav-link">Attendance Punch In</button>
+            <button style="display: none;" id="attendancePunchOut" class="nav-link">Attendance Punch Out</button>
+            <span style="display: none; background-color: skyblue;" id="attendancePunchDone" class="nav-link">Your attendence Done</span>
+        @endif
       </li>
     </ul>
 

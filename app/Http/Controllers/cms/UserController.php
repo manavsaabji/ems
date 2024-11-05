@@ -337,4 +337,7 @@ class UserController extends Controller
         saveLogs($data);
         return redirect(route('dashboard'));
     }
+
+
+    
 }

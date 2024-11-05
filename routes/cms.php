@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\cms\ActivityLogsController;
+use App\Http\Controllers\cms\AttendanceController;
 use App\Http\Controllers\cms\DashboardController;
 use App\Http\Controllers\cms\DepartmentController;
 use App\Http\Controllers\cms\EmployeeController;
@@ -31,7 +32,7 @@ Route::resource("employee", EmployeeController::class);
 Route::resource("department", DepartmentController::class);
 Route::resource("task", TaskController::class);
 Route::resource("leave", LeaveController::class);
-
+Route::resource("attendance", AttendanceController::class);
 
 //Activity Logs
 Route::get('activity-logs',                 [ActivityLogsController::class, 'index'])->name('activityLogs');
@@ -47,3 +48,12 @@ Route::get('edit-profile/', [UserController::class, 'editProfile'])->name('editP
 Route::put('submit-profile/', [UserController::class, 'submitProfile'])->name('submitProfile');
 
 Route::post('leave-cancel/{id}', [LeaveController::class, 'leaveCancel'])->name('leaveCancel');
+
+Route::get('attendance-first-date', [AttendanceController::class, 'getFirstDate'])->name('getFirstDate');
+
+Route::get('manually-attendance', [AttendanceController::class, 'manuallyAttendance'])->name('manuallyAttendance');
+
+Route::get('get-manually-attendance', [AttendanceController::class, 'getManuallyAttendance'])->name('getManuallyAttendance');
+
+Route::post('submit-manually-attendance/', [AttendanceController::class, 'submitManuallyAttendance'])->name('submitManuallyAttendance');
+

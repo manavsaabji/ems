@@ -124,6 +124,13 @@ class LeaveController extends Controller
         $leave->status = 'pending';
         $leave->user_id = auth()->user()->id;
         $leave->save();
+
+        $data['message']            =       auth()->user()->name." has created leave";
+        $data['action']             =       'created';
+        $data['module']             =       'leave';
+        $data['object']             =       $leave;
+        saveLogs($data);
+
         Session::flash('success', 'data saved successfully');
         return redirect(route('leave.index'));
 
@@ -168,6 +175,13 @@ class LeaveController extends Controller
         }
         $leave->status = $request->status;
         $leave->update();
+
+        $data['message']            =       auth()->user()->name." has update leave";
+        $data['action']             =       'update';
+        $data['module']             =       'leave';
+        $data['object']             =       $leave;
+        saveLogs($data);
+
         Session::flash('success', 'data updated successfully');
         return redirect(route('leave.index'));
     }
@@ -188,6 +202,13 @@ class LeaveController extends Controller
         }
         $leave->status = 'cancel';
         $leave->update();
+
+        $data['message']            =       auth()->user()->name." has cancel leave";
+        $data['action']             =       'cancel';
+        $data['module']             =       'leave';
+        $data['object']             =       $leave;
+        saveLogs($data);
+
         Session::flash('success', 'leave Cancel successfully');
         return redirect(route('leave.index'));
     }

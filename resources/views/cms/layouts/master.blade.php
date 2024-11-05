@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>AdminLTE 3 | Dashboard</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -120,6 +121,85 @@
                 toastr.error("{{ $error }}")
             @endforeach
         @endif
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getFirstDate') }}",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "json",
+            success: function(data) {
+                // alert("first date: " + data.response);
+                if(data.response == 'punch in'){
+                    document.getElementById("attendancePunchOut").style.display = "none";
+                    document.getElementById("attendancePunchIn").style.display = "block";
+                }else if(data.response == 'punch out'){
+                    document.getElementById("attendancePunchIn").style.display = "none";
+                    document.getElementById("attendancePunchOut").style.display = "block";
+                }else if(data.response == 'attendence done'){
+                    document.getElementById("attendancePunchOut").style.display = "none";
+                    document.getElementById("attendancePunchDone").style.display = "block";
+                }
+            },
+            error: function(data) {
+                // alert("first date: " + data.responseJSON.response);
+                if(data.responseJSON.response == 'no data'){
+                    document.getElementById("attendancePunchIn").style.display = "block";
+                    document.getElementById("attendancePunchOut").style.display = "none";
+                }
+            }
+        });
+
+
+
+
+        $("#attendancePunchIn").click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('attendance.store') }}",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function(data){
+                    alert("Data Saved: " + data.message);
+                    document.getElementById("attendancePunchOut").style.display = "block";
+                    document.getElementById("attendancePunchIn").style.display = "none";
+                },
+                error: function(data){
+                    alert("Error: " + data.responseJSON.message);
+                }
+            });
+        });
+
+
+
+
+        $("#attendancePunchOut").click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: "PUT",
+                url: "{{ route('attendance.update', ':attendance') }}",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function(data){
+                    alert("Data Saved: " + data.message);
+                    document.getElementById("attendancePunchOut").style.display = "none";
+                    document.getElementById("attendancePunchDone").style.display = "block";
+                },
+                error: function(data){
+                    alert("Error: " + data.responseJSON.message);
+                }
+            });
+        });
+
+
 
 </script>
 

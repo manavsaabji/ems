@@ -9,7 +9,7 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block">{{ auth()->user()->name }}</a>
             </div>
         </div>
 
@@ -140,6 +140,31 @@
                                 class="nav-link @if (Route::currentRouteName() == 'leave.create') active @endif">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Leave Create</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'attendance.index', 'manuallyAttendance' ])) menu-open @endif">
+                    <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'attendance.index', 'manuallyAttendance' ])) active @endif">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Attendance Management
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('attendance.index') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'attendance.index') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Attendance List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('manuallyAttendance') }}"
+                                class="nav-link @if (Route::currentRouteName() == 'manuallyAttendance') active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Mannual Attendance</p>
                             </a>
                         </li>
                     </ul>
