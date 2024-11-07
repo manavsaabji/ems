@@ -152,12 +152,14 @@ class AttendanceController extends Controller
 
     public function manuallyAttendance(Request $request)
     {
+        $this->authorize('mannualAttendance',new Attendance());
         $data['users'] = User::pluck('name', 'id')->toArray();
 
         return view('cms.attendance.form', $data);
     }
     public function getManuallyAttendance(Request $request)
     {
+        // $this->authorize('mannualAttendance',new Attendance());
         // $attendance = Attendance::where('user_id', $request->user)
         //     ->whereDate('date', $request->date)
         //     ->first();
@@ -215,6 +217,8 @@ class AttendanceController extends Controller
         // }
 
 
+        $this->authorize('mannualAttendance',new Attendance());
+        
         $isSunday = Carbon::parse($request->date)->isSunday();
         if($isSunday){
             Session::flash('error','Punch-in is not allowed today as it is Sunday.');

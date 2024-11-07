@@ -16,6 +16,7 @@ class ModuleController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         if($request->ajax())
         {
             $data  = Module::select('*')->with('permissions');
@@ -53,6 +54,7 @@ class ModuleController extends Controller
      */
     public function create()
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $data['object'] = new Module();
         $data['method'] = 'POST';
         $data['url'] = route('module.store');
@@ -64,6 +66,7 @@ class ModuleController extends Controller
      */
     public function store(ModuleRequest $request)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $module = new Module();
         $module->name = $request->name;
         $module->save();
@@ -88,6 +91,7 @@ class ModuleController extends Controller
      */
     public function edit(string $id)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $data['object'] = Module::find($id);
         if(empty($data['object'])){
             Session::flash('error','data not found');
@@ -103,6 +107,7 @@ class ModuleController extends Controller
      */
     public function update(ModuleRequest $request, string $id)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $module = Module::find($id);
         if(empty($module)){
             Session::flash('error','data not found');
@@ -123,6 +128,7 @@ class ModuleController extends Controller
      */
     public function destroy(string $id)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $module = Module::find($id);
         if(empty($module)){
             Session::flash('error','data not found');

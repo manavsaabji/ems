@@ -19,6 +19,7 @@
   </div>
   <!-- /.content-header -->
     <div class="row">
+        @if(auth()->user()->hasAnyRole(['admin','hr']))
         <div class="ml-2 col-lg-3 col-6">
 
             <div class="small-box bg-info">
@@ -46,6 +47,33 @@
                 <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
+        <div class="ml-2 col-lg-3 col-6">
+
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $leaveApproved }}</h3>
+                    <p> On Leave</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-calendar"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="ml-2 col-lg-3 col-6">
+
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $leavePending }}</h3>
+                    <p> Pending Leave</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-calendar"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        @endif
     </div>
 
 

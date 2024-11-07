@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
@@ -17,6 +18,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('management',new User());
         if($request->ajax())
         {
             $data  = Role::select('*');
@@ -57,6 +59,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $this->authorize('management',new User());
         $data['object'] = new Role();
         $data['method'] = 'POST';
         $data['url'] = route('role.store');
@@ -68,6 +71,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        $this->authorize('management',new User());
         $role = new Role();
         $role->name = $request->name;
         $role->save();
@@ -93,6 +97,7 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('management',new User());
         $data['object'] = Role::find($id);
         if(empty($data['object'])){
             Session::flash('error','data not found');
@@ -108,6 +113,7 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, string $id)
     {
+        $this->authorize('management',new User());
         $role = Role::find($id);
         if(empty($role)){
             Session::flash('error','data not found');
@@ -129,6 +135,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('management',new User());
         $role = Role::find($id);
         if(empty($role)){
             Session::flash('error', 'data not found');
@@ -143,8 +150,9 @@ class RoleController extends Controller
         Session::flash('success', 'data deleted successfully');
         return redirect(route('role.index'));
     }
-    public function assignPermission($id){
-
+    public function assignPermission($id)
+    {
+        $this->authorize('management',new User());
         $data['role'] = Role::with('permissions')->find($id);
         if(empty($data['role'])){
             Session::flash('error', 'data not found');
@@ -155,7 +163,9 @@ class RoleController extends Controller
         return view('cms.role.assignPermission', $data);
     }
 
-    public function submitPermission(Request $request){
+    public function submitPermission(Request $request)
+    {
+        $this->authorize('management',new User());
         $role = Role::find($request->id);
         if(empty($role)){
             Session::flash('error', 'data not found');

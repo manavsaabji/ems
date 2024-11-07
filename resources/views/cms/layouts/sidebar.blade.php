@@ -38,7 +38,7 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-
+                @can('management', new App\Models\User())
                 <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'user.index', 'role.index', 'permission.index', 'module.index' ])) menu-open @endif">
                     <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'user.index', 'role.index', 'permission.index', 'module.index' ])) active @endif">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -62,6 +62,7 @@
                                 <p>Role List</p>
                             </a>
                         </li>
+                        @if(auth()->user()->hasRole('admin'))
                         <li class="nav-item">
                             <a href="{{ route('permission.index') }}"
                                 class="nav-link @if (Route::currentRouteName() == 'permission.index') active @endif">
@@ -69,6 +70,7 @@
                                 <p>Permission List</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="{{ route('module.index') }}"
                                 class="nav-link @if (Route::currentRouteName() == 'module.index') active @endif">
@@ -76,8 +78,10 @@
                                 <p>Module List</p>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </li>
+                @endcan
                 <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'task.index', 'task.create' ])) menu-open @endif">
                     <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'task.index', 'task.create' ])) active @endif">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -103,6 +107,7 @@
                         </li>
                     </ul>
                 </li>
+                @can('management', new App\Models\Department())
                 <li class="nav-item">
                     <a href="{{ route('department.index') }}"
                         class="nav-link @if (Route::currentRouteName() == 'department.index') active @endif">
@@ -110,6 +115,7 @@
                         <p>Department List</p>
                     </a>
                 </li>
+                @endcan
                 <li class="nav-item @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create', 'leaveIndexAll' ])) menu-open @endif">
                     <a href="#" class="nav-link @if (in_array(Route::currentRouteName(), [ 'leave.index', 'leave.create', 'leaveIndexAll' ])) active @endif">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -118,8 +124,9 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview">
-                        @if(auth()->user()->hasRole('admin'))
+                        @can('leaveHistory', new App\Models\Leave())
                         <li class="nav-item">
                             <a href="{{ route('leaveIndexAll') }}"
                                 class="nav-link @if (Route::currentRouteName() == 'leaveIndexAll') active @endif">
@@ -127,7 +134,7 @@
                                 <p>Leave History</p>
                             </a>
                         </li>
-                        @endif
+                        @endcan
                         <li class="nav-item">
                             <a href="{{ route('leave.index') }}"
                                 class="nav-link @if (Route::currentRouteName() == 'leave.index') active @endif">
@@ -160,6 +167,7 @@
                                 <p>Attendance List</p>
                             </a>
                         </li>
+                        @can('mannualAttendance', new App\Models\Attendance())
                         <li class="nav-item">
                             <a href="{{ route('manuallyAttendance') }}"
                                 class="nav-link @if (Route::currentRouteName() == 'manuallyAttendance') active @endif">
@@ -167,14 +175,18 @@
                                 <p>Mannual Attendance</p>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('activityLogs') }}" class="nav-link  @if(Route::currentRouteName() == 'activityLogs') active @endif">
-                        <i class="fas fa-circle nav-icon"></i>
-                        <p>Activity Logs</p>
-                    </a>
-                </li>
+                @if(auth()->user()->hasRole('admin'))
+                    <li class="nav-item">
+                        <a href="{{ route('activityLogs') }}" class="nav-link  @if(Route::currentRouteName() == 'activityLogs') active @endif">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Activity Logs</p>
+                        </a>
+                    </li>
+                @endif
+
 
 
             </ul>

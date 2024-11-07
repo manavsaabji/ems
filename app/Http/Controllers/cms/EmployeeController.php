@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -49,7 +50,7 @@ class EmployeeController extends Controller
      */
     public function edit(string $id)
     {
-
+        $this->authorize('management',new User());
         $data['object'] = Employee::with('user')->find($id);
         if(empty($data['object'])){
             Session::flash('success','Data not found');
@@ -67,6 +68,7 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeRequest $request, string $id)
     {
+        $this->authorize('management',new User());
         // dd($request->id);
         $employee = Employee::find($id);
         if(empty($employee)){
@@ -78,7 +80,7 @@ class EmployeeController extends Controller
         $employee->phone_no = $request->phone_no;
         $employee->salary = $request->salary;
         $employee->department_id = $request->department_id;
-        
+
         if($request->has('addhar_card')){
             if(file_exists('uploads/addhar_card/'. $employee->addhar_card)){
                 File::delete('uploads/addhar_card/'. $employee->addhar_card);

@@ -74,6 +74,14 @@ class User extends Authenticatable
         }
         return false;
     }
+    public function hasAnyRole(array $roles)
+    {
+        $userRoles   =   $this->roles()->pluck('name')->toArray();
+        $userRoles   = array_map('strtolower',$userRoles );
+        $roles = array_map('strtolower', $roles);
+
+        return (bool) array_intersect($userRoles, $roles);
+    }
     public function employee():HasOne
     {
         return $this->hasOne(Employee::class);
@@ -90,5 +98,41 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
+    public function hasPermission($access,$module)
+    {
+        if($this->hasRole('admin'))
+        {
+            return true;
+        }
+        if($this->permissionCache == null){
+            $this->permissionCache  = $this->permissions();
+        }
+        if(Module::$moduleCache == null){
+            Module::$moduleCache = Module::all();
+        }
+        $module = Module::$moduleCache->where('name', $module)->first();
+        if( $this->permissionCache->isNotEmpty() && !empty($module))
+        {
+            $permissions  = $this->permissionCache->where('module_id',$module->id);
 
+            if($permissions->isNotEmpty())
+            {
+                $permissions = $permissions->where('name',$access);
+                if($permissions->isNotEmpty() )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public function permissions()
+    {
+        return $this->roles->load('permissions')->pluck('permissions')->collapse()->map(function($item){
+            $item->access = strtolower($item->access);
+            return $item;
+        });
+    }
 }
+
+

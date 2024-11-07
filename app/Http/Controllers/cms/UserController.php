@@ -25,6 +25,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('management',new User());
         if($request->ajax())
         {
 
@@ -90,6 +91,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->authorize('management',new User());
         $data['object'] = new User();
         $data['method'] = 'POST';
         $data['url'] = route('user.store');
@@ -101,6 +103,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        $this->authorize('management',new User());
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
@@ -145,6 +148,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('management',new User());
         $data['object'] = User::find($id);
         if(empty($data['object'])){
             Session::flash('error','data not found');
@@ -160,6 +164,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, string $id)
     {
+        $this->authorize('management',new User());
         $user = User::find($id);
         if(empty($user)){
             Session::flash('error','data not found');
@@ -197,6 +202,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('management',new User());
         $user = User::find($id);
         if(empty($user)){
             Session::flash('error','data deleted');
@@ -221,6 +227,7 @@ class UserController extends Controller
 
     public function assignRole($id)
     {
+        $this->authorize('management',new User());
         $data['user'] = User::with('roles')->find($id);
         if(empty($data['user'])){
             Session::flash('error','data not found in assign role');
@@ -233,6 +240,7 @@ class UserController extends Controller
 
     public function submitRole(Request $request)
     {
+        $this->authorize('management',new User());
         // dd($request);
         $user = User::find($request->id);
         if(empty($user)){
@@ -338,6 +346,4 @@ class UserController extends Controller
         return redirect(route('dashboard'));
     }
 
-
-    
 }

@@ -11,6 +11,8 @@ class Module extends Model
 {
     use HasFactory;
 
+    public static $moduleCache;
+
     public function permissions():HasMany
     {
         return $this->hasMany(Permission::class);

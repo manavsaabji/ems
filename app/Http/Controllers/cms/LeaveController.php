@@ -215,20 +215,18 @@ class LeaveController extends Controller
 
     public function leaveIndexAll(Request $request)
     {
-        if(auth()->user()->hasRole('admin')){
-            if($request->ajax()){
-                $data  = Leave::select('*')->with('user')->orderBy('start_date','DESC');
-                return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('user', function($data){
-                    return $data->user->name ?? 'N/A';
-                })
-                ->rawColumns(['user'])
-                ->make(true);
-            }
-            return view('cms.leave.indexAll');
+        $this->authorize('leaveHistory',new Leave());
+        if($request->ajax()){
+            $data  = Leave::select('*')->with('user')->orderBy('start_date','DESC');
+            return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('user', function($data)
+            {
+                return $data->user->name ?? 'N/A';
+            })
+            ->rawColumns(['user'])
+            ->make(true);
         }
+        return view('cms.leave.indexAll');
     }
-
-
 }

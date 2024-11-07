@@ -17,6 +17,7 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         if($request->ajax())
         {
             $data  = Permission::select('*')->with('module');
@@ -54,6 +55,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $data['object'] = new Permission();
         $data['method'] = 'POST';
         $data['url'] = route('permission.store');
@@ -66,6 +68,7 @@ class PermissionController extends Controller
      */
     public function store(PermissionRequest $request)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $duplicate = Permission::where('module_id',$request->module_id)
         ->where('name',strtolower($request->name))->exists();
 
@@ -99,6 +102,7 @@ class PermissionController extends Controller
      */
     public function edit(string $id)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $data['object'] = Permission::find($id);
         if(empty($data['object'])){
             Session::flash('error','data not found');
@@ -115,6 +119,7 @@ class PermissionController extends Controller
      */
     public function update(PermissionRequest $request, string $id)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $duplicate = Permission::where('id','<>',$request->id)->where('module_id',$request->module_id)
         ->where('name',strtolower($request->name))->exists();
         if($duplicate){
@@ -143,6 +148,7 @@ class PermissionController extends Controller
      */
     public function destroy(string $id)
     {
+        abort_if(!auth()->user()->hasRole('admin'), 403);
         $permission = Permission::find($id);
         if(empty($permission)){
             Session::flash('error','data not found');

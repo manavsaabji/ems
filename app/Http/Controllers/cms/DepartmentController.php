@@ -16,6 +16,7 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('management',new Department());
         if($request->ajax()){
             $data  = Department::select('*');
             return DataTables::of($data)
@@ -44,6 +45,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
+        $this->authorize('management',new Department());
         $data['object'] = new Department();
         $data['method'] = 'POST';
         $data['url'] = route('department.store');
@@ -55,6 +57,7 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request)
     {
+        $this->authorize('management',new Department());
         $department = new Department();
         $department->name = $request->name;
         $department->save();
@@ -81,6 +84,7 @@ class DepartmentController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('management',new Department());
         $data['object'] = Department::find($id);
         if(empty($data['object'])){
             Session::flash('error','data not found');
@@ -96,6 +100,7 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, string $id)
     {
+        $this->authorize('management',new Department());
         $department = Department::find($id);
         if(empty($department)){
             Session::flash('error','data not found');
@@ -119,6 +124,7 @@ class DepartmentController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('management',new Department());
         $department = Department::find($id);
         if(empty($department)){
             Session::flash('error','data deleted');
