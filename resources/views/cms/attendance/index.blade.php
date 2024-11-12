@@ -114,8 +114,9 @@
                                             if ($leave->start_date <= $currentDate && $leave->end_date >= $currentDate) {
                                                 $onLeave = true;
                                                 $reason = $leave->reason;
+                                                $duration = $leave->leave_duration;
                                                 // dd($leave->start_date, $leave->end_date, $currentDate);
-                                                break; 
+                                                break;
                                             }
                                         @endphp
                                     @endforeach
@@ -123,12 +124,22 @@
 
                                 <td class="{{ $isSunday ? 'sunday-clr' : ($onLeave ? 'leave-clr' : ($attendanceForDay ? 'badge-success' : 'badge-danger')) }}">
                                     @if($isSunday)
+                                        <div class="sunday-clr">
                                         <strong>Sunday</strong>
-                                    @elseif($onLeave)
-                                        <strong>Leave: </strong> {{ $reason }}
-                                    @elseif($attendanceForDay)
-                                        <strong>Punch In:</strong> {{ Carbon\Carbon::createFromFormat('H:i:s', $attendanceForDay->arrival_time)->format('h:i A') ?? 'N/A' }}<br>
-                                        <strong>Punch Out:</strong> @if(!empty($attendanceForDay->end_time)) {{ Carbon\Carbon::createFromFormat('H:i:s', $attendanceForDay->end_time)->format('h:i A')  }}@else 'N/A'@endif
+                                        <div>
+                                    @elseif($onLeave || $attendanceForDay)
+                                        @if($onLeave)
+                                            @if($duration == 'first half' || $duration == 'second half')
+                                                <strong>Duration: </strong> {{ $duration }} <br>
+                                            @endif
+                                            <strong>Leave: </strong> {{ $reason }}
+                                        @endif
+                                        @if($attendanceForDay)
+                                            <div class='badge-success'>
+                                                <strong>Punch In:</strong> {{ Carbon\Carbon::createFromFormat('H:i:s', $attendanceForDay->arrival_time)->format('h:i A') ?? 'N/A' }}<br>
+                                                <strong>Punch Out:</strong> @if(!empty($attendanceForDay->end_time)) {{ Carbon\Carbon::createFromFormat('H:i:s', $attendanceForDay->end_time)->format('h:i A')  }}@else 'N/A'@endif
+                                            <div>
+                                        @endif
                                     @else
                                         <strong>Absent</strong>
                                     @endif

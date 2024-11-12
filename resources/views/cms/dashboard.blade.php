@@ -57,7 +57,7 @@
                 <div class="icon">
                     <i class="ion ion-calendar"></i>
                 </div>
-                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('leaveIndexAll') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="ml-2 col-lg-3 col-6">
@@ -70,7 +70,7 @@
                 <div class="icon">
                     <i class="ion ion-calendar"></i>
                 </div>
-                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('leave.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         @endif

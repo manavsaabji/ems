@@ -4,9 +4,12 @@ namespace App\Http\Controllers\cms;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveRequest;
+use App\Mail\LeaveCreate;
 use App\Models\Leave;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -124,6 +127,12 @@ class LeaveController extends Controller
         $leave->status = 'pending';
         $leave->user_id = auth()->user()->id;
         $leave->save();
+
+        $userName = auth()->user()->name;
+        $hrEmail = User::whereHas('roles', function($query) {
+            $query->where('name', 'hr');
+        })->pluck('email')->toArray();
+        Mail::to($hrEmail)->send(new LeaveCreate($leave, $userName));
 
         $data['message']            =       auth()->user()->name." has created leave";
         $data['action']             =       'created';
